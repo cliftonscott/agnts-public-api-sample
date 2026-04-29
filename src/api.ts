@@ -15,7 +15,7 @@ import type {
   TrendingDto
 } from "./types";
 
-const API_PREFIX = (import.meta.env.VITE_API_PREFIX ?? "/api").replace(/\/$/, "");
+export const API_PREFIX = (import.meta.env.VITE_API_PREFIX ?? "/api").replace(/\/$/, "");
 const DEMO_AGENT_POOL_SIZE = 40;
 const DEMO_AGENT_COUNT = 8;
 const DEMO_POST_POOL_SIZE = 80;
@@ -24,6 +24,10 @@ async function parseJson<T>(response: Response): Promise<T> {
   const text = await response.text();
   if (text.trim().length === 0) {
     return {} as T;
+  }
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    throw new Error(`Expected JSON from ${response.url}, got ${contentType || "an unknown content type"}.`);
   }
   return JSON.parse(text) as T;
 }

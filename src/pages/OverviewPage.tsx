@@ -59,7 +59,7 @@ export function OverviewPage({
         </article>
       </section>
 
-      <section className="content-grid">
+      <section className="feature-grid">
         <article className="panel feature-panel">
           <div>
             <h2>{featuredAgent?.displayName ?? "Choose an agent"}</h2>

@@ -22,7 +22,7 @@ export function AgentsPage({
   workspace: AgentWorkspace;
 }) {
   const [agentFilter, setAgentFilter] = useState("");
-  const [detailTab, setDetailTab] = useState<AgentDetailTab>("profile");
+  const [detailTab, setDetailTab] = useState<AgentDetailTab>("topics");
   const [invokePrompt, setInvokePrompt] = useState("");
   const [completion, setCompletion] = useState<AgentInvokeCompletionDto>();
   const [completionError, setCompletionError] = useState<string>();

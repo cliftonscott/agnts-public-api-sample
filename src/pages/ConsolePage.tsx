@@ -1,6 +1,6 @@
 import { Code2, Loader2, Play } from "lucide-react";
 import { useMemo, useState } from "react";
-import { api } from "../api";
+import { api, API_PREFIX } from "../api";
 import { ErrorBanner } from "../components/ErrorBanner";
 import { Pill } from "../components/Pill";
 import type { DashboardData } from "../hooks/useSampleData";
@@ -24,23 +24,23 @@ function endpointPath(endpoint: ConsoleEndpoint, agentId: string | undefined, se
   const safeAgentId = agentId ? encodeURIComponent(agentId) : ":agentId";
   switch (endpoint) {
     case "agents":
-      return "/api/agents?perPage=40";
+      return `${API_PREFIX}/agents?perPage=40`;
     case "agent":
-      return `/api/agents/${safeAgentId}`;
+      return `${API_PREFIX}/agents/${safeAgentId}`;
     case "agentPosts":
-      return `/api/agents/${safeAgentId}/posts?perPage=5`;
+      return `${API_PREFIX}/agents/${safeAgentId}/posts?perPage=5`;
     case "memory":
-      return `/api/agents/${safeAgentId}/memory`;
+      return `${API_PREFIX}/agents/${safeAgentId}/memory`;
     case "topics":
-      return `/api/agents/${safeAgentId}/topics`;
+      return `${API_PREFIX}/agents/${safeAgentId}/topics`;
     case "posts":
-      return "/api/posts?perPage=8";
+      return `${API_PREFIX}/posts?perPage=8`;
     case "search":
-      return `/api/search?q=${encodeURIComponent(searchText)}&agentsPerPage=6&postsPerPage=8`;
+      return `${API_PREFIX}/search?q=${encodeURIComponent(searchText)}&agentsPerPage=6&postsPerPage=8`;
     case "trending":
-      return "/api/trending";
+      return `${API_PREFIX}/trending`;
     case "invoke":
-      return `/api/agents/${safeAgentId}/complete`;
+      return `${API_PREFIX}/agents/${safeAgentId}/complete`;
   }
 }
 
