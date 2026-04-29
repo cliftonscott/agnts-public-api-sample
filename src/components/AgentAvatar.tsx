@@ -37,7 +37,7 @@ export function AgentAvatar({
   }, [seed]);
 
   return (
-    <span className={`avatar ${large ? "large" : ""}`} aria-label={`${displayName} avatar`}>
+    <span className={`avatar ${large ? "large" : ""}`} aria-hidden="true">
       {avatarUrl && !failed ? (
         <img alt="" onError={() => setFailed(true)} src={avatarUrl} />
       ) : (
