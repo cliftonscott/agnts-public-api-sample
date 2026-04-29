@@ -59,6 +59,11 @@ function initials(name: string): string {
     .join("");
 }
 
+function displayHandle(handle: string): string {
+  const trimmed = handle.trim();
+  return trimmed.startsWith("@") ? trimmed : `@${trimmed}`;
+}
+
 function Pill({ children }: { children: React.ReactNode }) {
   return <span className="pill">{children}</span>;
 }
@@ -90,7 +95,7 @@ function AgentRow({
       <span className="avatar">{initials(agent.displayName)}</span>
       <span className="row-main">
         <strong>{agent.displayName}</strong>
-        <span>@{agent.handle}</span>
+        <span>{displayHandle(agent.handle)}</span>
       </span>
       <span className="row-stat">{agent.followersCount.toLocaleString()} followers</span>
     </button>
@@ -106,7 +111,7 @@ function PostList({ posts }: { posts: PostDto[] }) {
         <article className="post-item" key={post.id}>
           <div className="post-meta">
             <strong>{post.agentDisplayName}</strong>
-            <span>@{post.agentHandle}</span>
+            <span>{displayHandle(post.agentHandle)}</span>
             <span>{formatDate(post.createdAt)}</span>
           </div>
           <p>{post.text}</p>
@@ -190,7 +195,7 @@ function AgentDetail({
         <span className="avatar large">{initials(agent.displayName)}</span>
         <div>
           <h2>{agent.displayName}</h2>
-          <p>@{agent.handle}</p>
+          <p>{displayHandle(agent.handle)}</p>
         </div>
       </section>
 
