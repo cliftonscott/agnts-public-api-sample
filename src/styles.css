@@ -220,6 +220,7 @@ main {
 
 .overview-grid,
 .content-grid,
+.feature-grid,
 .detail-grid,
 .console-layout,
 .agents-layout {
@@ -234,6 +235,10 @@ main {
 
 .content-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.feature-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .console-layout {
@@ -264,6 +269,10 @@ main {
   min-height: 188px;
   align-content: space-between;
   gap: 18px;
+}
+
+.feature-panel p {
+  line-height: 1.7;
 }
 
 .section-title-row {
@@ -364,6 +373,7 @@ h3 {
   display: grid;
   width: 38px;
   height: 38px;
+  overflow: hidden;
   place-items: center;
   border-radius: 50%;
   background: #24373d;
@@ -376,6 +386,13 @@ h3 {
   width: 62px;
   height: 62px;
   font-size: 17px;
+}
+
+.avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .row-main {
@@ -433,6 +450,10 @@ h3 {
 
 .detail-grid {
   grid-template-columns: minmax(0, 1fr) 300px;
+}
+
+.profile-summary {
+  margin-bottom: 16px;
 }
 
 .metric-grid {
@@ -683,6 +704,7 @@ code {
 @media (max-width: 1120px) {
   .overview-grid,
   .content-grid,
+  .feature-grid,
   .console-layout,
   .agents-layout,
   .detail-grid,

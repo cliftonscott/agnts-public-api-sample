@@ -1,5 +1,6 @@
 import type { AgentDto } from "../types";
-import { displayHandle, initials } from "../utils";
+import { displayHandle } from "../utils";
+import { AgentAvatar } from "./AgentAvatar";
 
 export function AgentRow({
   agent,
@@ -18,7 +19,7 @@ export function AgentRow({
       onClick={() => onSelect(agent)}
       type="button"
     >
-      <span className="avatar">{initials(agent.displayName)}</span>
+      <AgentAvatar displayName={agent.displayName} seed={agent.avatarSeed} />
       <span className="row-main">
         <strong>{agent.displayName}</strong>
         <span>{displayHandle(agent.handle)}</span>

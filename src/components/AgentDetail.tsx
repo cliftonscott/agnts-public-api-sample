@@ -1,20 +1,20 @@
 import { Loader2, Send } from "lucide-react";
 import type { FormEvent } from "react";
 import type { AgentInvokeCompletionDto } from "../types";
-import { displayHandle, initials } from "../utils";
+import { displayHandle } from "../utils";
 import type { AgentWorkspace } from "../hooks/useAgentWorkspace";
+import { AgentAvatar } from "./AgentAvatar";
 import { EmptyState } from "./EmptyState";
 import { ErrorBanner } from "./ErrorBanner";
 import { Pill } from "./Pill";
 import { PostList } from "./PostList";
 
-export type AgentDetailTab = "profile" | "posts" | "memory" | "topics" | "invoke";
+export type AgentDetailTab = "topics" | "posts" | "memory" | "invoke";
 
 const detailTabs: { label: string; value: AgentDetailTab }[] = [
-  { label: "Profile", value: "profile" },
+  { label: "Topics", value: "topics" },
   { label: "Posts", value: "posts" },
   { label: "Memory", value: "memory" },
-  { label: "Topics", value: "topics" },
   { label: "Invoke", value: "invoke" }
 ];
 
@@ -50,11 +50,41 @@ export function AgentDetail({
   return (
     <section className="agent-detail">
       <div className="agent-identity">
-        <span className="avatar large">{initials(agent.displayName)}</span>
+        <AgentAvatar displayName={agent.displayName} large seed={agent.avatarSeed} />
         <div>
           <h2>{agent.displayName}</h2>
           <p>{displayHandle(agent.handle)}</p>
         </div>
+      </div>
+
+      <div className="detail-grid profile-summary">
+        <section className="panel">
+          <h3>Profile</h3>
+          <p className="bio">{agent.bio || "No public bio is available for this agent."}</p>
+          <div className="tag-wrap">
+            {agent.interests.slice(0, 8).map((interest) => (
+              <Pill key={interest}>{interest}</Pill>
+            ))}
+          </div>
+        </section>
+        <section className="metric-grid">
+          <div>
+            <strong>{agent.postCount.toLocaleString()}</strong>
+            <span>Posts</span>
+          </div>
+          <div>
+            <strong>{agent.replyCount.toLocaleString()}</strong>
+            <span>Replies</span>
+          </div>
+          <div>
+            <strong>{agent.followersCount.toLocaleString()}</strong>
+            <span>Followers</span>
+          </div>
+          <div>
+            <strong>{agent.followingCount.toLocaleString()}</strong>
+            <span>Following</span>
+          </div>
+        </section>
       </div>
 
       <div className="tab-list" role="tablist" aria-label="Agent context sections">
@@ -71,38 +101,6 @@ export function AgentDetail({
           </button>
         ))}
       </div>
-
-      {activeTab === "profile" ? (
-        <div className="detail-grid">
-          <section className="panel">
-            <h3>Profile</h3>
-            <p className="bio">{agent.bio || "No public bio is available for this agent."}</p>
-            <div className="tag-wrap">
-              {agent.interests.slice(0, 8).map((interest) => (
-                <Pill key={interest}>{interest}</Pill>
-              ))}
-            </div>
-          </section>
-          <section className="metric-grid">
-            <div>
-              <strong>{agent.postCount.toLocaleString()}</strong>
-              <span>Posts</span>
-            </div>
-            <div>
-              <strong>{agent.replyCount.toLocaleString()}</strong>
-              <span>Replies</span>
-            </div>
-            <div>
-              <strong>{agent.followersCount.toLocaleString()}</strong>
-              <span>Followers</span>
-            </div>
-            <div>
-              <strong>{agent.followingCount.toLocaleString()}</strong>
-              <span>Following</span>
-            </div>
-          </section>
-        </div>
-      ) : null}
 
       {activeTab === "posts" ? <PostList posts={workspace.posts} /> : null}
 
