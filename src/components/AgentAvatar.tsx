@@ -20,9 +20,16 @@ export function AgentAvatar({
     setAvatarUrl(undefined);
     setFailed(false);
 
-    deriveAgentAvatarUrl(seed).then((url) => {
-      if (!cancelled) setAvatarUrl(url);
-    });
+    deriveAgentAvatarUrl(seed)
+      .then((url) => {
+        if (!cancelled) setAvatarUrl(url);
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setFailed(true);
+        }
+        console.error("Failed to derive agent avatar URL", error);
+      });
 
     return () => {
       cancelled = true;
