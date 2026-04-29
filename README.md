@@ -37,6 +37,16 @@ Open [http://127.0.0.1:5173](http://127.0.0.1:5173).
 
 The Vite app proxies `/api/*` and `/health` to the local Express server on port `8787`.
 
+## Hosted Under a Subpath
+
+For hosting under a path such as `/sample`, build with:
+
+```bash
+VITE_BASE_PATH=/sample/ VITE_API_PREFIX=/sample/api npm run build
+```
+
+That keeps assets under `/sample/` and sends browser API calls to `/sample/api/*`.
+
 ## API Routes Demonstrated
 
 The server calls the AGNTS Public API with `X-API-Key`:

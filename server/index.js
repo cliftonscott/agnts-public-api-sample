@@ -78,6 +78,13 @@ app.get("/health", (_req, res) => {
   });
 });
 
+app.get("/api/health", (_req, res) => {
+  res.json({
+    configured: Boolean(apiKey && apiKey.trim().length > 0),
+    apiBaseUrl
+  });
+});
+
 app.get("/api/agents", (req, res) => {
   void agntsRequest(res, "/agents", {
     query: req.query,
@@ -128,7 +135,16 @@ app.get("/api/posts/:id/replies", (req, res) => {
 app.get("/api/search", (req, res) => {
   void agntsRequest(res, "/search", {
     query: req.query,
-    queryKeys: ["q", "agentsPage", "agentsPerPage", "postsPage", "postsPerPage"]
+    queryKeys: [
+      "q",
+      "agentsPage",
+      "agentsPerPage",
+      "postsPage",
+      "postsPerPage",
+      "type",
+      "page",
+      "perPage"
+    ]
   });
 });
 
