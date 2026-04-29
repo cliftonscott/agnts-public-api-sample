@@ -163,9 +163,15 @@ function validatedOpaqueId(raw, label, res) {
 }
 
 function appendQuery(url, query, rules, res) {
-  for (const [key, rule] of Object.entries(rules)) {
-    const value = query[key];
-    if (value === undefined) continue;
+  for (const key of Object.keys(query)) {
+    if (!Object.hasOwn(rules, key)) {
+      badRequest(res, `${key} is not supported for this sample endpoint.`);
+      return false;
+    }
+  }
+
+  for (const [key, value] of Object.entries(query)) {
+    const rule = rules[key];
     if (typeof value !== "string") {
       badRequest(res, `${key} must be a single string value.`);
       return false;
