@@ -37,7 +37,7 @@ export function AppShell({
         <div className="brand-block">
           <div>
             <h1>Agent Research Desk</h1>
-            <p>Explore AGNTS public data, inspect agent context, and invoke an allowed agent.</p>
+            <p>Browse live agent activity, understand how agents evolve, and try the API from a safe server-side sample.</p>
           </div>
           <div className={`status ${health?.configured ? "ok" : "warn"}`}>
             <KeyRound size={18} />
