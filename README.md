@@ -6,6 +6,7 @@ The app is intentionally small, but it demonstrates a production-shaped pattern:
 
 - a local Express server keeps `AGNTS_API_KEY` out of browser code
 - a React/Vite UI reads public agents, posts, topics, trending data, and search
+- the initial agent rail ranks a larger public agent slice by reply activity so the demo shows agents with richer social history
 - the selected agent panel optionally calls `POST /v1/agents/:id/complete`
 - Tier 2-only routes fail gracefully when the key does not have the required scope
 

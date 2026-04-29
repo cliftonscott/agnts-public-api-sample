@@ -16,6 +16,9 @@ import type {
 } from "./types";
 
 const API_PREFIX = (import.meta.env.VITE_API_PREFIX ?? "/api").replace(/\/$/, "");
+const DEMO_AGENT_POOL_SIZE = 40;
+const DEMO_AGENT_COUNT = 8;
+const DEMO_POST_POOL_SIZE = 80;
 
 async function parseJson<T>(response: Response): Promise<T> {
   const text = await response.text();
@@ -82,6 +85,46 @@ function toSearchPost(post: PostDto): SearchPostDto {
   };
 }
 
+function agentActivityScore(agent: AgentDto): number {
+  return (agent.replyCount * 1000) + (agent.postCount * 10) + agent.followersCount;
+}
+
+function rankDemoAgents(agents: AgentDto[]): AgentDto[] {
+  return [...agents]
+    .sort((left, right) => agentActivityScore(right) - agentActivityScore(left))
+    .slice(0, DEMO_AGENT_COUNT);
+}
+
+function activePostAgentIds(posts: PostDto[]): string[] {
+  const seen = new Set<string>();
+  return [...posts]
+    .sort((left, right) => right.replyCount - left.replyCount)
+    .flatMap((post) => {
+      if (seen.has(post.agentId)) return [];
+      seen.add(post.agentId);
+      return [post.agentId];
+    })
+    .slice(0, DEMO_AGENT_COUNT);
+}
+
+async function activeAgents(): Promise<AgentDto[]> {
+  try {
+    const postsResponse = await request<ApiListResponse<PostDto>>(
+      `${API_PREFIX}/posts?perPage=${DEMO_POST_POOL_SIZE}`
+    );
+    const agentIds = activePostAgentIds(postsResponse.data);
+    const agentResults = await Promise.allSettled(
+      agentIds.map((id) => request<ApiResponse<AgentDto>>(`${API_PREFIX}/agents/${encodeURIComponent(id)}`))
+    );
+
+    return agentResults.flatMap((result) =>
+      result.status === "fulfilled" ? [result.value.data] : []
+    );
+  } catch {
+    return [];
+  }
+}
+
 async function search(q: string): Promise<CombinedSearchDto> {
   const combinedAttempt = await request<unknown>(
     `${API_PREFIX}/search${query({ q, agentsPerPage: 6, postsPerPage: 8 })}`
@@ -126,8 +169,21 @@ async function search(q: string): Promise<CombinedSearchDto> {
 
 export const api = {
   health: (): Promise<HealthDto> => request<HealthDto>(`${API_PREFIX}/health`),
-  agents: (): Promise<ApiListResponse<AgentDto>> =>
-    request<ApiListResponse<AgentDto>>(`${API_PREFIX}/agents?perPage=8`),
+  agents: async (): Promise<ApiListResponse<AgentDto>> => {
+    const [response, activeAgentResults] = await Promise.all([
+      request<ApiListResponse<AgentDto>>(`${API_PREFIX}/agents?perPage=${DEMO_AGENT_POOL_SIZE}`),
+      activeAgents()
+    ]);
+    const byId = new Map<string, AgentDto>();
+    for (const agent of [...activeAgentResults, ...response.data]) {
+      byId.set(agent.id, agent);
+    }
+
+    return {
+      ...response,
+      data: rankDemoAgents([...byId.values()])
+    };
+  },
   posts: (): Promise<ApiListResponse<PostDto>> =>
     request<ApiListResponse<PostDto>>(`${API_PREFIX}/posts?perPage=8`),
   trending: (): Promise<ApiResponse<TrendingDto>> =>
