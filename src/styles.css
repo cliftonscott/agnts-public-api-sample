@@ -136,40 +136,51 @@ main {
 
 .workspace-grid {
   display: grid;
-  grid-template-columns: 310px minmax(0, 1fr) 430px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.65fr);
   gap: 18px;
   align-items: start;
 }
 
-.sidebar,
+.workspace-grid > *,
+.agent-workspace,
 .main-panel,
-.detail-panel,
+.topics-rail {
+  min-width: 0;
+}
+
+.agent-workspace,
+.main-panel,
 .topics-rail {
   border: 1px solid #d7e0e2;
   border-radius: 8px;
   background: #ffffff;
 }
 
-.sidebar,
-.detail-panel {
-  position: sticky;
-  top: 16px;
-  max-height: calc(100vh - 32px);
-  overflow: auto;
-}
-
-.sidebar {
-  padding: 16px;
-}
-
+.agent-workspace,
 .main-panel,
-.detail-panel,
 .topics-rail {
   padding: 18px;
 }
 
-.topics-rail {
-  grid-column: 2 / 4;
+.network-column {
+  display: grid;
+  gap: 18px;
+}
+
+.agent-picker {
+  margin-bottom: 20px;
+  border: 1px solid #dce5e7;
+  border-radius: 8px;
+  background: #fbfdfe;
+  padding: 12px;
+}
+
+.agent-rail {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .section-title-row,
@@ -208,7 +219,6 @@ h3 {
   font-size: 13px;
 }
 
-.sidebar section + section,
 .panel-section {
   margin-top: 20px;
 }
@@ -225,6 +235,17 @@ h3 {
   background: transparent;
   padding: 9px;
   text-align: left;
+}
+
+.agent-rail .agent-row {
+  flex: 0 0 220px;
+  margin-top: 0;
+}
+
+@media (min-width: 900px) {
+  .agent-rail .agent-row {
+    flex-basis: 260px;
+  }
 }
 
 .agent-row:hover,
@@ -289,6 +310,10 @@ h3 {
   margin-bottom: 18px;
 }
 
+.network-column .search-form {
+  grid-template-columns: 1fr;
+}
+
 input,
 textarea {
   width: 100%;
@@ -331,7 +356,7 @@ textarea:focus {
 
 .search-results {
   display: grid;
-  grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.2fr);
+  grid-template-columns: 1fr;
   gap: 16px;
   align-items: start;
 }
@@ -375,6 +400,8 @@ textarea:focus {
   color: #275d58;
   font-size: 12px;
   font-weight: 800;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .profile-strip {
@@ -473,7 +500,7 @@ textarea:focus {
 
 .topic-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 10px;
   margin-top: 14px;
 }
@@ -484,21 +511,7 @@ textarea:focus {
 
 @media (max-width: 1180px) {
   .workspace-grid {
-    grid-template-columns: 280px minmax(0, 1fr);
-  }
-
-  .detail-panel {
-    grid-column: 1 / 3;
-    position: static;
-    max-height: none;
-  }
-
-  .topics-rail {
-    grid-column: 1 / 3;
-  }
-
-  .topic-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 
@@ -519,14 +532,6 @@ textarea:focus {
   .search-results,
   .search-form {
     grid-template-columns: 1fr;
-  }
-
-  .sidebar,
-  .detail-panel,
-  .topics-rail {
-    grid-column: auto;
-    position: static;
-    max-height: none;
   }
 
   .topic-grid {

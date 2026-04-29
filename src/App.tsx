@@ -444,23 +444,72 @@ export function App() {
         </div>
       ) : (
         <div className="workspace-grid">
-          <aside className="sidebar">
-            <section>
+          <section className="agent-workspace">
+            <div className="panel-header">
+              <div>
+                <h2>Agent Workspace</h2>
+                <p>Choose an agent, then inspect their public context in one place.</p>
+              </div>
+              <Sparkles size={20} />
+            </div>
+
+            <section className="agent-picker">
               <div className="section-title-row">
-                <h2>Agents</h2>
+                <h3>Choose an Agent</h3>
                 <Bot size={18} />
               </div>
-              {dashboard.agents.map((agent) => (
-                <AgentRow
-                  key={agent.id}
-                  agent={agent}
-                  selected={agent.id === selectedAgentId}
-                  onSelect={(nextAgent) => setSelectedAgentId(nextAgent.id)}
-                />
-              ))}
+              <div className="agent-rail" aria-label="Available agents">
+                {dashboard.agents.map((agent) => (
+                  <AgentRow
+                    key={agent.id}
+                    agent={agent}
+                    selected={agent.id === selectedAgentId}
+                    onSelect={(nextAgent) => setSelectedAgentId(nextAgent.id)}
+                  />
+                ))}
+              </div>
             </section>
 
-            <section>
+            <AgentDetail
+              workspace={workspace}
+              completion={completion}
+              completionError={completionError}
+              completionLoading={completionLoading}
+              prompt={invokePrompt}
+              onPromptChange={setInvokePrompt}
+              onSubmit={handleInvoke}
+            />
+          </section>
+
+          <aside className="network-column">
+            <section className="main-panel">
+              <div className="panel-header">
+                <div>
+                  <h2>Search the Network</h2>
+                  <p>Combined agent and post search through the Tier 1 public API.</p>
+                </div>
+                <Search size={20} />
+              </div>
+              <form className="search-form" onSubmit={handleSearch}>
+                <input
+                  value={searchText}
+                  onChange={(event) => setSearchText(event.target.value)}
+                  placeholder="Search agents and posts"
+                />
+                <button className="primary-button" disabled={searchLoading}>
+                  {searchLoading ? <Loader2 className="spin" size={16} /> : <Search size={16} />}
+                  Search
+                </button>
+              </form>
+
+              <SearchResults
+                agents={searchAgents}
+                posts={searchPosts}
+                onSelect={(agent) => setSelectedAgentId(agent.id)}
+              />
+            </section>
+
+            <section className="main-panel">
               <div className="section-title-row">
                 <h2>Trending</h2>
                 <Activity size={18} />
@@ -474,80 +523,34 @@ export function App() {
                 ))}
               </div>
             </section>
-          </aside>
 
-          <section className="main-panel">
-            <div className="panel-header">
-              <div>
-                <h2>Search the Network</h2>
-                <p>Combined agent and post search through the Tier 1 public API.</p>
-              </div>
-              <Search size={20} />
-            </div>
-            <form className="search-form" onSubmit={handleSearch}>
-              <input
-                value={searchText}
-                onChange={(event) => setSearchText(event.target.value)}
-                placeholder="Search agents and posts"
-              />
-              <button className="primary-button" disabled={searchLoading}>
-                {searchLoading ? <Loader2 className="spin" size={16} /> : <Search size={16} />}
-                Search
-              </button>
-            </form>
-
-            <SearchResults
-              agents={searchAgents}
-              posts={searchPosts}
-              onSelect={(agent) => setSelectedAgentId(agent.id)}
-            />
-
-            <section className="panel-section">
+            <section className="main-panel">
               <div className="section-title-row">
-                <h3>Recent Public Posts</h3>
+                <h2>Recent Public Posts</h2>
                 <MessageSquareText size={18} />
               </div>
               <PostList posts={dashboard.posts} />
             </section>
-          </section>
 
-          <aside className="detail-panel">
-            <div className="panel-header">
-              <div>
-                <h2>Agent Context</h2>
-                <p>Profile, memory, topics, posts, and optional invocation.</p>
+            <section className="topics-rail">
+              <div className="section-title-row">
+                <h2>Topic Radar</h2>
+                <Network size={18} />
               </div>
-              <Sparkles size={20} />
-            </div>
-            <AgentDetail
-              workspace={workspace}
-              completion={completion}
-              completionError={completionError}
-              completionLoading={completionLoading}
-              prompt={invokePrompt}
-              onPromptChange={setInvokePrompt}
-              onSubmit={handleInvoke}
-            />
+              <div className="topic-grid">
+                {dashboard.topics.map((topic) => (
+                  <article key={topic.topicId}>
+                    <strong>
+                      {topic.emoji ? `${topic.emoji} ` : ""}
+                      {topic.name}
+                    </strong>
+                    <span>{topic.postCount24h} posts today</span>
+                    <span>{topic.uniqueAgents24h} agents active</span>
+                  </article>
+                ))}
+              </div>
+            </section>
           </aside>
-
-          <section className="topics-rail">
-            <div className="section-title-row">
-              <h2>Topic Radar</h2>
-              <Network size={18} />
-            </div>
-            <div className="topic-grid">
-              {dashboard.topics.map((topic) => (
-                <article key={topic.topicId}>
-                  <strong>
-                    {topic.emoji ? `${topic.emoji} ` : ""}
-                    {topic.name}
-                  </strong>
-                  <span>{topic.postCount24h} posts today</span>
-                  <span>{topic.uniqueAgents24h} agents active</span>
-                </article>
-              ))}
-            </div>
-          </section>
         </div>
       )}
     </main>
