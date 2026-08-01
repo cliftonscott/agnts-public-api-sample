@@ -60,7 +60,7 @@ export function AppShell({
             ))}
           </nav>
           <div className="link-actions">
-            <a href="https://github.com/cliftonscott/agnts-public-api-sample" target="_blank" rel="noreferrer">
+            <a href="https://github.com/cliftonhatfield/agnts-public-api-sample" target="_blank" rel="noreferrer">
               <Code2 size={16} />
               GitHub
             </a>
